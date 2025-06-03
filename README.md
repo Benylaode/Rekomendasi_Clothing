@@ -314,18 +314,34 @@ def ndcg_at_k(relevances, k):
 
 #### **Hasil Evaluasi:**
 
-* **nDCG\@5 untuk ID 767**:
-  Relevansi: \[5, 5, 5, 5, 5] → **nDCG\@5 = 0.9116**
+* **nDCG\@5 untuk Rekomendasi Item Tertentu (ID 767)**:
+  Relevansi (Rating): \[5, 5, 5, 5, 5] → **nDCG\@5 = 0.9116**
 
-* **nDCG\@5 untuk ID 1078**:
-  Relevansi: \[5, 5, 5, 5, 5] → **nDCG\@5 = 0.9139**
+* **nDCG\@5 untuk Rekomendasi Item Paling Populer (ID 1078)**:
+  Relevansi (Rating): \[5, 5, 5, 5, 5] → **nDCG\@5 = 0.9139**
 
 #### **Interpretasi Hasil:**
 
-* Skor nDCG yang sangat tinggi menunjukkan sistem berhasil menempatkan item relevan di posisi teratas.
-* Rekomendasi sangat relevan baik untuk item tertentu maupun item populer.
-* Masalah *overload informasi*, *personalisasi*, dan *engagement* dapat diatasi.
-* Goals proyek tercapai: sistem dapat meningkatkan kepuasan dan potensi peningkatan konversi penjualan.
+* Nilai nDCG yang Tinggi: Kedua skenario menghasilkan skor nDCG\@5 yang sangat tinggi (mendekati 1). Ini menunjukkan bahwa model rekomendasi berhasil menempatkan item-item yang sangat relevan (dengan rating tinggi) di posisi teratas daftar rekomendasi.
+* Perbandingan: Skor nDCG untuk rekomendasi item populer (0.9139) sedikit lebih tinggi dibandingkan dengan rekomendasi item tertentu (0.9116). Perbedaan ini sangat kecil (sekitar 0.0023).
+
+#### **Analisis dalam Konteks Problem Statements dan Goals:**
+
+* **Menjawab Problem Statements:**
+
+  * **Overload Informasi Produk:** Skor nDCG yang tinggi mengindikasikan bahwa sistem rekomendasi berhasil menyaring dan menyajikan item-item yang paling relevan di antara banyaknya pilihan. Ini secara langsung membantu mengatasi overload informasi produk karena pelanggan disajikan dengan daftar yang terkurasi dan berkualitas tinggi, mengurangi waktu dan usaha mereka dalam mencari item yang sesuai.
+  * **Peningkatan Penjualan dan Engagement:** Dengan menempatkan item-item yang sangat relevan di bagian atas daftar, sistem meningkatkan kemungkinan pelanggan akan menemukan dan membeli produk yang mereka sukai. Relevansi yang tinggi ini diharapkan dapat meningkatkan engagement pelanggan (karena rekomendasi yang baik mendorong interaksi lebih lanjut) dan secara berpotensi meningkatkan metrik bisnis seperti tingkat konversi dan average order value.
+  * **Personalisasi Pengalaman Belanja:** Meskipun nDCG untuk rekomendasi spesifik (ID 767) sedikit di bawah rekomendasi populer, nilai yang tetap tinggi (0.9116) menunjukkan bahwa model berbasis konten mampu memberikan rekomendasi yang sangat relevan dan personal berdasarkan karakteristik item yang diminati pelanggan. Ini berarti sistem berhasil dalam tujuan menyediakan pengalaman belanja yang lebih personal dan efisien dengan memahami preferensi konten individual dan menyarankan item yang selaras.
+
+* **Menjawab Goals:**
+
+  * **Mengembangkan sistem rekomendasi pakaian yang mampu menyarankan produk yang relevan kepada pelanggan:** Keberhasilan model dalam mencapai nDCG di atas 0.9 secara langsung memvalidasi bahwa sistem rekomendasi yang dikembangkan mampu menyarankan produk yang relevan kepada pelanggan, sesuai dengan tujuan utama proyek.
+  * **Meningkatkan kepuasan pelanggan:** Relevansi yang tinggi (diukur dari rating item yang direkomendasikan) secara langsung berkorelasi dengan peningkatan kepuasan pelanggan. Ketika pelanggan menerima rekomendasi yang akurat dan sesuai dengan keinginan mereka, pengalaman belanja mereka menjadi lebih positif.
+  * **Berpotensi meningkatkan metrik bisnis seperti tingkat konversi dan average order value:** Konsistensi dalam merekomendasikan item dengan rating tinggi (relevansi tinggi) adalah dasar untuk berpotensi meningkatkan metrik bisnis. Pelanggan yang menemukan produk yang sangat relevan lebih mungkin untuk menyelesaikan pembelian dan bahkan menjelajahi produk serupa, yang dapat mendorong nilai transaksi rata-rata.
+
+#### **Kesimpulan Evaluasi:**
+
+Model rekomendasi berbasis konten ini menunjukkan kinerja yang sangat baik dalam menempatkan item relevan di posisi teratas daftar rekomendasi, dengan skor nDCG\@5 di atas 0.9. Ini mengindikasikan bahwa sistem mampu merekomendasikan pakaian yang sesuai dengan konten item yang dicari, secara efektif mengatasi masalah overload informasi produk dan meningkatkan potensi penjualan dan engagement dengan menyajikan rekomendasi yang personal dan relevan. Keberhasilan ini secara langsung mendukung tujuan pengembangan sistem rekomendasi yang efektif dan peningkatan kepuasan pelanggan, serta berpotensi positif terhadap metrik bisnis. Untuk pengembangan lebih lanjut, fokus dapat diberikan pada peningkatan kemampuan model untuk menemukan item yang lebih beragam namun tetap relevan, serta mempertimbangkan integrasi dengan pendekatan collaborative filtering untuk mendapatkan manfaat dari kedua metode.
 
 ---
 
