@@ -32,7 +32,7 @@ Sistem rekomendasi menjadi sangat penting karena dapat mengatasi masalah informa
 
 #### **Solution Approach (Pendekatan Solusi)**
 
-Untuk mencapai tujuan di atas, ada dua pendekatan utama dalam sistem rekomendasi:
+Untuk mencapai tujuan di atas, pendekatan utama dalam sistem rekomendasi:
 
 ##### **1. Content-Based Filtering:**
 
@@ -45,9 +45,6 @@ Untuk mencapai tujuan di atas, ada dua pendekatan utama dalam sistem rekomendasi
 * **Kekurangan**: Terbatas pada rekomendasi item yang mirip dengan yang sudah dikenal pengguna (kurang eksplorasi), sulit merekomendasikan item yang sangat berbeda dari preferensi sebelumnya, tergantung pada kualitas deskripsi item.
 
 Dalam proyek ini, kami akan fokus pada implementasi Content-Based Filtering karena ketersediaan data ulasan dan atribut produk yang kaya, yang sangat cocok untuk pendekatan ini.
-
----
-Berikut ini adalah **lanjutan isi lengkap laporan proyek** tanpa pengurangan satu huruf pun, dimulai dari:
 
 ---
 
@@ -64,6 +61,7 @@ Dataset yang digunakan adalah *Womens Clothing E-Commerce Reviews.csv*. Dataset 
   * Kolom *Rating* menunjukkan kepuasan pelanggan terhadap produk.
   * Kolom *Positive Feedback Count* menunjukkan jumlah feedback positif pada ulasan.
   * Kolom *Clothing ID* adalah pengidentifikasi unik untuk setiap produk pakaian.
+  * dengan link data sebagai berikut : https://www.kaggle.com/datasets/nicapotato/womens-ecommerce-clothing-reviews/data
 
 ---
 
