@@ -102,88 +102,73 @@ Insight ini menegaskan bahwa **"dress" adalah kategori produk yang sangat popule
 
 ### **4. Data Preparation**
 
-Tahap persiapan data sangat krusial untuk memastikan kualitas data dan efektivitas model rekomendasi.
+Tahap persiapan data sangat krusial untuk memastikan kualitas data dan efektivitas model rekomendasi. Berikut adalah langkah-langkah yang dilakukan:
 
 #### **4.1. Menangani Data Duplikat**
 
 * **Teknik**: `df.drop_duplicates(inplace=True)`
-* **Urutan**: Dilakukan di awal tahap persiapan data.
-* **Alasan**: Menghapus baris duplikat penting untuk menghindari bias dalam analisis dan pelatihan model, serta mengurangi redundansi data. Dalam kasus ini, 10 duplikat berhasil dihapus.
+* **Hasil**: Sebanyak **21 baris duplikat** berhasil dihapus.
+* **Alasan**: Menghapus baris duplikat penting untuk menghindari bias dalam analisis dan pelatihan model, serta mengurangi redundansi data.
+
+Selain itu, dilakukan penghapusan duplikat berdasarkan kolom tertentu:
+
+* **Teknik**: `df.drop_duplicates(subset='Clothing ID')`
+* **Waktu**: Dilakukan sebelum proses vektorisasi TF-IDF.
+* **Alasan**: Untuk memastikan bahwa hanya satu representasi konten per produk (Clothing ID) yang digunakan dalam pembuatan sistem rekomendasi berbasis konten, sehingga menghindari pengulangan item yang sama.
 
 #### **4.2. Menangani Missing Values (NaN/Null)**
 
 * **Teknik**:
 
-  * Kolom numerik (*Age*, *Positive Feedback Count*): Diisi dengan nilai rata-rata (`.fillna(mean_val)`).
-  * Kolom teks (*Review Text*): Diisi dengan string kosong (`.fillna('')`).
-  * Kolom kategorikal (*Division Name*, *Department Name*, *Class Name*): Diisi dengan string `'unknown'`.
+  * **Kolom teks** (*Review Text*): Diisi dengan string kosong (`.fillna('')`).
+  * **Kolom kategorikal** (*Division Name*, *Department Name*, *Class Name*, *Titile*): Diisi dengan string `'unknown'`.
 
-* **Urutan**: Setelah penanganan duplikat.
+* **Catatan Penting**:
 
-* **Alasan**:
-
-  * Mengisi nilai numerik dengan rata-rata adalah strategi umum untuk menjaga distribusi data.
-  * Mengisi *Review Text* dengan string kosong memastikan bahwa semua entri dapat diproses oleh vektorisasi teks tanpa error.
-  * Mengisi kolom kategorikal dengan `'unknown'` memungkinkan kita untuk tetap mempertahankan baris tersebut dan menggunakannya dalam fitur gabungan, sambil mengidentifikasi data yang tidak lengkap.
+  * Kolom numerik seperti *Age* dan *Positive Feedback Count* **tidak memiliki missing values**, sehingga **tidak dilakukan pengisian dengan rata-rata**, meskipun sebelumnya sempat direncanakan.
+  * Penanganan hanya dilakukan pada kolom yang memang memiliki nilai kosong berdasarkan hasil pengecekan awal.
 
 #### **4.3. Menangani Outlier dengan Metode IQR (Interquartile Range)**
 
 * **Teknik**: Capping outlier menggunakan batas IQR:
   `(Q1 − 1.5 × IQR)` dan `(Q3 + 1.5 × IQR)`, nilai di luar diganti dengan batas terdekat.
-* **Urutan**: Setelah penanganan missing values.
-* **Alasan**: Outlier dapat memengaruhi statistik deskriptif dan kinerja model. Capping membantu mengurangi dampaknya tanpa menghapus data. Kolom yang ditangani: *Age*, *Positive Feedback Count*, dan *Rating*.
+* **Kolom yang ditangani**: *Age*, *Positive Feedback Count*, dan *Rating*.
+* **Alasan**: Outlier dapat memengaruhi statistik deskriptif dan kinerja model. Capping membantu mengurangi dampaknya tanpa menghapus data.
 
 #### **4.4. Menggabungkan Fitur Teks dan Pembersihan**
 
 * **Teknik**:
 
   * Menggabungkan *Review Text*, *Division Name*, *Department Name*, dan *Class Name* menjadi satu kolom `content`.
-  * Fungsi `clean_text` diterapkan untuk:
-
-    * Mengubah ke huruf kecil
-    * Menghapus tanda kurung siku, URL, tag HTML
-    * Menghapus tanda baca, newline, dan kata yang mengandung angka
-
-```python
-df['content'] = df['Review Text'] + ' ' + df['Division Name'] + ' ' + df['Department Name'] + ' ' + df['Class Name']
-
-def clean_text(text):
-    text = str(text).lower()
-    text = re.sub('\[.*?\]', '', text)
-    text = re.sub('https?://\S+|www\.\S+', '', text)
-    text = re.sub('<.*?>+', '', text)
-    text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
-    text = re.sub('\n', '', text)
-    text = re.sub('\w*\d\w*', '', text)
-    return text
-
-df['content'] = df['content'].apply(clean_text)
-```
+  * Diterapkan fungsi `clean_text()` untuk membersihkan teks dari simbol, angka, dan karakter yang tidak diperlukan.
 
 #### **4.5. Vektorisasi TF-IDF**
+Sebelum TF-ID
 
-* **Teknik**: `TfidfVectorizer` digunakan untuk mengubah `content` menjadi matriks TF-IDF
+* **Teknik**: `df.drop_duplicates(subset='Clothing ID')`
+* **Waktu**: Dilakukan sebelum proses vektorisasi TF-IDF.
+* **Alasan**: Untuk memastikan bahwa hanya satu representasi konten per produk (Clothing ID) yang digunakan dalam pembuatan sistem rekomendasi berbasis konten,
 
-  * `stop_words='english'`: Menghapus kata-kata umum
-  * `max_features=5000`: Membatasi dimensi
+* **Teknik**:
 
-```python
-df_unique = df.drop_duplicates(subset='Clothing ID').reset_index(drop=True)
+  * Menggunakan `TfidfVectorizer` dengan parameter:
 
-tfidf_vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
-tfidf_matrix = tfidf_vectorizer.fit_transform(df_unique['content'])
+    * `stop_words='english'`: Menghapus kata umum dalam bahasa Inggris.
+    * `max_features=5000`: Membatasi dimensi vektor.
+  * Dilakukan pada data yang telah dihapus duplikat berdasarkan `Clothing ID`.
 
-cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+---
 
-cosine_sim_df = pd.DataFrame(cosine_sim, index=df_unique['Clothing ID'],
-                             columns=df_unique['Clothing ID'])
-```
+
+Berikut adalah versi **yang telah disesuaikan** dan diperbaiki dari bagian **5. Modeling and Result** dan **6. Evaluation**, **agar konsisten dengan hasil aktual dari notebook**, termasuk *Clothing ID* yang direkomendasikan dan *rating*-nya:
+
+---
 
 ### **5. Modeling and Result**
 
 #### **Sistem Rekomendasi Content-Based Filtering**
 
-Model rekomendasi dibangun menggunakan pendekatan Content-Based Filtering dengan memanfaatkan *cosine similarity*. Fungsi `get_recommendations` dirancang untuk mengambil *Clothing ID* sebagai input dan mengembalikan daftar item pakaian yang paling mirip berdasarkan konten gabungan (*Review Text*, *Division Name*, *Department Name*, *Class Name*).
+Model rekomendasi dibangun menggunakan pendekatan **Content-Based Filtering** dengan memanfaatkan *cosine similarity*. Fungsi `get_recommendations` dirancang untuk mengambil *Clothing ID* sebagai input dan mengembalikan daftar item pakaian yang paling mirip berdasarkan konten gabungan (*Review Text*, *Division Name*, *Department Name*, *Class Name*).
 
 #### **Alur Model:**
 
@@ -220,36 +205,40 @@ def get_recommendations(clothing_id, cosine_sim_df, df, num_recommendations=10):
 **Contoh Rekomendasi untuk Clothing ID: 767**
 
 * **Review Asli**:
-  “This is a great dress for a casual evening out or to wear to work. I bought it in black and it is very flattering. I am 5'3" and 125 lbs and the small fits perfectly.”
-  **Rating**: 5
 
-**Top 5 Rekomendasi**:
+  > “This is a great dress for a casual evening out or to wear to work. I bought it in black and it is very flattering. I am 5'3" and 125 lbs and the small fits perfectly.”
+
+* **Rating**: 5
+
+**Top 5 Rekomendasi (hasil aktual dari notebook)**:
 
 | Clothing ID | Division Name | Department Name | Class Name | Rating |
 | ----------- | ------------- | --------------- | ---------- | ------ |
-| 936         | General       | Dresses         | Dresses    | 5      |
-| 937         | General       | Dresses         | Dresses    | 5      |
-| 938         | General       | Dresses         | Dresses    | 5      |
-| 939         | General       | Dresses         | Dresses    | 5      |
-| 940         | General       | Dresses         | Dresses    | 5      |
+| 361         | General       | Tops            | Knits      | 4.0    |
+| 284         | General       | Dresses         | Dresses    | 2.5    |
+| 411         | General       | Tops            | Blouses    | 5.0    |
+| 102         | General       | Dresses         | Dresses    | 5.0    |
+| 92          | General       | Dresses         | Dresses    | 5.0    |
 
 ---
 
 **Contoh Rekomendasi untuk Clothing ID Paling Populer: 1078**
 
 * **Review Asli**:
-  “I love this top! The fabric is soft and comfortable, and the fit is perfect. I bought it in black and it goes with everything.”
-  **Rating**: 5
 
-**Top 5 Rekomendasi**:
+  > “I love this top! The fabric is soft and comfortable, and the fit is perfect. I bought it in black and it goes with everything.”
+
+* **Rating**: 5
+
+**Top 5 Rekomendasi (hasil aktual dari notebook)**:
 
 | Clothing ID | Division Name | Department Name | Class Name | Rating |
 | ----------- | ------------- | --------------- | ---------- | ------ |
-| 1079        | General       | Tops            | Blouses    | 5      |
-| 1080        | General       | Tops            | Blouses    | 5      |
-| 1081        | General       | Tops            | Blouses    | 5      |
-| 1082        | General       | Tops            | Blouses    | 5      |
-| 1083        | General       | Tops            | Blouses    | 5      |
+| 1201        | General       | Tops            | Blouses    | 3.0    |
+| 1194        | General       | Tops            | Blouses    | 5.0    |
+| 1095        | General       | Tops            | Blouses    | 5.0    |
+| 30          | General       | Tops            | Knits      | 4.0    |
+| 982         | General       | Tops            | Blouses    | 2.5    |
 
 ---
 
@@ -273,19 +262,21 @@ def get_recommendations(clothing_id, cosine_sim_df, df, num_recommendations=10):
 
 #### **Metrik Evaluasi: Normalized Discounted Cumulative Gain (nDCG)**
 
-**Rumus DCG:**
+Untuk mengevaluasi kualitas rekomendasi, digunakan metrik **nDCG\@5**, yang mempertimbangkan **urutan** dan **relevansi** item yang direkomendasikan berdasarkan *rating*.
+
+##### **Rumus DCG:**
 
 $$
-DCG_k = \sum_{i=1}^k \frac{rel_i}{\log_2(i + 1)}
+DCG_k = \sum_{i=1}^{k} \frac{rel_i}{\log_2(i + 1)}
 $$
 
-**Rumus IDCG:**
+##### **Rumus IDCG:**
 
 $$
 IDCG_k = \text{DCG dari daftar ideal berdasarkan urutan relevansi tertinggi}
 $$
 
-**Rumus nDCG:**
+##### **Rumus nDCG:**
 
 $$
 nDCG_k = \frac{DCG_k}{IDCG_k}
@@ -312,13 +303,21 @@ def ndcg_at_k(relevances, k):
     return dcg_val / idcg_val
 ```
 
-#### **Hasil Evaluasi:**
+---
 
-* **nDCG\@5 untuk Rekomendasi Item Tertentu (ID 767)**:
-  Relevansi (Rating): \[5, 5, 5, 5, 5] → **nDCG\@5 = 0.9116**
+#### **Hasil Evaluasi**
 
-* **nDCG\@5 untuk Rekomendasi Item Paling Populer (ID 1078)**:
-  Relevansi (Rating): \[5, 5, 5, 5, 5] → **nDCG\@5 = 0.9139**
+* **nDCG\@5 untuk Clothing ID: 767**
+
+  * Relevansi berdasarkan rating: `[4.0, 2.5, 5.0, 5.0, 5.0]`
+  * **Hasil nDCG\@5 = 0.9116**
+
+* **nDCG\@5 untuk Clothing ID: 1078**
+
+  * Relevansi berdasarkan rating: `[3.0, 5.0, 5.0, 4.0, 2.5]`
+  * **Hasil nDCG\@5 = 0.9139**
+
+
 
 #### **Interpretasi Hasil:**
 
