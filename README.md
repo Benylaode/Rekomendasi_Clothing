@@ -110,12 +110,6 @@ Tahap persiapan data sangat krusial untuk memastikan kualitas data dan efektivit
 * **Hasil**: Sebanyak **21 baris duplikat** berhasil dihapus.
 * **Alasan**: Menghapus baris duplikat penting untuk menghindari bias dalam analisis dan pelatihan model, serta mengurangi redundansi data.
 
-Selain itu, dilakukan penghapusan duplikat berdasarkan kolom tertentu:
-
-* **Teknik**: `df.drop_duplicates(subset='Clothing ID')`
-* **Waktu**: Dilakukan sebelum proses vektorisasi TF-IDF.
-* **Alasan**: Untuk memastikan bahwa hanya satu representasi konten per produk (Clothing ID) yang digunakan dalam pembuatan sistem rekomendasi berbasis konten, sehingga menghindari pengulangan item yang sama.
-
 #### **4.2. Menangani Missing Values (NaN/Null)**
 
 * **Teknik**:
