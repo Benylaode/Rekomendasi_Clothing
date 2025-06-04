@@ -53,7 +53,7 @@ Dalam proyek ini, kami akan fokus pada implementasi Content-Based Filtering kare
 Dataset yang digunakan adalah *Womens Clothing E-Commerce Reviews.csv*. Dataset ini berisi ulasan pelanggan dari produk pakaian wanita di platform e-commerce.
 
 * **Tautan Sumber Data**: Dataset ini umum ditemukan di platform seperti Kaggle. Asumsi file *Womens Clothing E-Commerce Reviews.csv* tersedia secara lokal di direktori kerja.
-* **Jumlah Data**: Dataset awal memiliki **23.486 baris dan 11 kolom**.
+* **Jumlah Data**: Dataset awal memiliki **23.486 baris dan 10 kolom** setelah 'Unamed:0' dijadikan index.
 * **Kondisi Data**:
 
   * Terdapat beberapa nilai hilang (NaN) pada kolom *Title*, *Review Text*, *Division Name*, *Department Name*, dan *Class Name*.
@@ -249,11 +249,11 @@ def get_recommendations(clothing_id, cosine_sim_df, df, num_recommendations=10):
 
 | Clothing ID | Division Name | Department Name | Class Name | Rating |
 | ----------- | ------------- | --------------- | ---------- | ------ |
-| 361         | General       | Tops            | Knits      | 4.0    |
-| 284         | General       | Dresses         | Dresses    | 2.5    |
-| 411         | General       | Tops            | Blouses    | 5.0    |
-| 102         | General       | Dresses         | Dresses    | 5.0    |
-| 92          | General       | Dresses         | Dresses    | 5.0    |
+| 361         | Initmates        | Intimate            | Intimates      | 4.0    |
+| 284         | Initmates        | Intimate         | Intimate    | 2.5    |
+| 411         | Initmates        | Intimate            | Intimates    | 5.0    |
+| 102         | Initmates        | Intimate         | Intimates    | 5.0    |
+| 92          | Initmates        | Intimate         | Intimates    | 5.0    |
 
 ---
 
@@ -269,11 +269,11 @@ def get_recommendations(clothing_id, cosine_sim_df, df, num_recommendations=10):
 
 | Clothing ID | Division Name | Department Name | Class Name | Rating |
 | ----------- | ------------- | --------------- | ---------- | ------ |
-| 1201        | General       | Tops            | Blouses    | 3.0    |
-| 1194        | General       | Tops            | Blouses    | 5.0    |
-| 1095        | General       | Tops            | Blouses    | 5.0    |
-| 30          | General       | Tops            | Knits      | 4.0    |
-| 982         | General       | Tops            | Blouses    | 2.5    |
+| 1201        | General       | Dresses            | Dresses    | 3.0    |
+| 1194        | General       | Dresses            | Dresses    | 5.0    |
+| 1095        | General Petite      | Dresses            | Dresses    | 5.0    |
+| 30          | General Petite      | Dresses            | Dresses      | 4.0    |
+| 982         | General       | Jackets            | Jackets    | 2.5    |
 
 ---
 
