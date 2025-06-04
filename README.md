@@ -136,25 +136,66 @@ Tahap persiapan data sangat krusial untuk memastikan kualitas data dan efektivit
   * Menggabungkan *Review Text*, *Division Name*, *Department Name*, dan *Class Name* menjadi satu kolom `content`.
   * Diterapkan fungsi `clean_text()` untuk membersihkan teks dari simbol, angka, dan karakter yang tidak diperlukan.
 
-#### **4.5. Vektorisasi TF-IDF**
-Sebelum TF-ID
 
-* **Teknik**: `df.drop_duplicates(subset='Clothing ID')`
-* **Waktu**: Dilakukan sebelum proses vektorisasi TF-IDF.
-* **Alasan**: Untuk memastikan bahwa hanya satu representasi konten per produk (Clothing ID) yang digunakan dalam pembuatan sistem rekomendasi berbasis konten,
+### **4.5. Vektorisasi TF-IDF**
 
-* **Teknik**:
+Sebelum menerapkan vektorisasi teks menggunakan TF-IDF (Term Frequency–Inverse Document Frequency), dilakukan penghapusan Clothing ID agar data itu unik untuk setiap pakaian.
 
-  * Menggunakan `TfidfVectorizer` dengan parameter:
+#### **Penghapusan Duplikasi**
 
-    * `stop_words='english'`: Menghapus kata umum dalam bahasa Inggris.
-    * `max_features=5000`: Membatasi dimensi vektor.
-  * Dilakukan pada data yang telah dihapus duplikat berdasarkan `Clothing ID`.
+```python
+df_unique = df.drop_duplicates(subset='Clothing ID').reset_index(drop=True)
+```
 
----
+* **Tujuan**: Menghapus entri duplikat berdasarkan kolom `Clothing ID` untuk memastikan setiap produk hanya direpresentasikan sekali dalam sistem rekomendasi. Ini penting agar hasil rekomendasi tidak berat sebelah karena satu produk muncul berulang.
+* **Hasil**: `df_unique` merupakan DataFrame baru yang hanya menyimpan satu baris per produk unik.
 
+#### **Vektorisasi TF-IDF**
 
-Berikut adalah versi **yang telah disesuaikan** dan diperbaiki dari bagian **5. Modeling and Result** dan **6. Evaluation**, **agar konsisten dengan hasil aktual dari notebook**, termasuk *Clothing ID* yang direkomendasikan dan *rating*-nya:
+```python
+tfidf_vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
+tfidf_matrix = tfidf_vectorizer.fit_transform(df_unique['content'])
+```
+
+* **Objek**: `TfidfVectorizer` digunakan untuk mengubah teks pada kolom `content` menjadi representasi numerik berbasis bobot TF-IDF.
+* **Parameter**:
+
+  * `stop_words='english'`: Menghapus kata-kata umum dalam bahasa Inggris (seperti “the”, “is”, “and”) yang tidak memberikan makna signifikan dalam analisis.
+  * `max_features=5000`: Membatasi jumlah kata unik (fitur) menjadi maksimal 5000 untuk mengurangi dimensi dan meningkatkan efisiensi komputasi.
+* **Output**: `tfidf_matrix` adalah matriks sparse berukuran `(jumlah produk unik x 5000)`, di mana setiap baris merepresentasikan satu produk dalam bentuk vektor TF-IDF.
+
+```python
+print(f"\nUkuran matriks TF-IDF: {tfidf_matrix.shape}")
+print(f"Jumlah fitur (kata unik) yang digunakan: {len(tfidf_vectorizer.get_feature_names_out())}")
+```
+
+#### **Perhitungan Cosine Similarity**
+
+```python
+cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+```
+
+* **Fungsi**: Menghitung kemiripan antar vektor TF-IDF menggunakan **cosine similarity**, yang mengukur sudut antara dua vektor dalam ruang fitur.
+* **Output**: Matriks `cosine_sim` berukuran `(jumlah produk unik x jumlah produk unik)` di mana setiap nilai menunjukkan tingkat kemiripan antara dua produk.
+
+```python
+print(f"\nUkuran matriks Cosine Similarity: {cosine_sim.shape}")
+print("Contoh matriks Cosine Similarity (5x5 teratas):\n", cosine_sim[:5, :5])
+```
+
+#### **Membentuk DataFrame Cosine Similarity**
+
+```python
+cosine_sim_df = pd.DataFrame(cosine_sim, index=df_unique['Clothing ID'], columns=df_unique['Clothing ID'])
+```
+
+* **Tujuan**: Membuat DataFrame untuk mempermudah pencarian dan interpretasi hasil kemiripan antar produk berdasarkan `Clothing ID`.
+* **Manfaat**: Memungkinkan untuk dengan mudah mengambil produk-produk yang paling mirip (berdasarkan konten) terhadap satu produk tertentu.
+
+```python
+print("\n--- Contoh DataFrame Cosine Similarity ---")
+print(cosine_sim_df.head())
+```
 
 ---
 
