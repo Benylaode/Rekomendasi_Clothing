@@ -390,7 +390,6 @@ Laporan ini disusun mengikuti struktur yang terorganisir dan logis:
 * **Modeling and Result**: Menjelaskan implementasi model Content-Based Filtering dan menunjukkan contoh rekomendasi.
 * **Evaluation**: Menguraikan metrik nDCG dan menganalisis hasil evaluasi model.
 
-> *Code snippet yang relevan disertakan untuk menjelaskan bagian-bagian kunci dari implementasi tanpa menyajikan seluruh kode proyek. Gambar (seperti visualisasi EDA) diasumsikan dapat dimuat dengan baik jika laporan ini dirender dalam format Markdown.*
 
 
 
