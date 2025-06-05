@@ -29,7 +29,7 @@ Sistem rekomendasi menjadi sangat penting karena dapat mengatasi masalah informa
 3. Berpotensi meningkatkan metrik bisnis seperti tingkat konversi dan average order value melalui rekomendasi yang tepat.
 
 
-Untuk mencapai tujuan di atas, pendekatan utama dalam sistem rekomendasi:
+Untuk mencapai tujuan di atas (solution Approach), pendekatan utama dalam sistem rekomendasi:
 
 ##### **1. Content-Based Filtering:**
 
