@@ -250,7 +250,7 @@ def get_recommendations(clothing_id, cosine_sim_df, df, num_recommendations=10):
 | Clothing ID | Division Name | Department Name | Class Name | Rating |
 | ----------- | ------------- | --------------- | ---------- | ------ |
 | 361         | Initmates        | Intimate            | Intimates      | 4.0    |
-| 284         | Initmates        | Intimate         | Intimate    | 2.5    |
+| 284         | Initmates        | Intimate         | Intimates    | 2.5    |
 | 411         | Initmates        | Intimate            | Intimates    | 5.0    |
 | 102         | Initmates        | Intimate         | Intimates    | 5.0    |
 | 92          | Initmates        | Intimate         | Intimates    | 5.0    |
